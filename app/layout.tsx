@@ -1,15 +1,12 @@
 import type { Metadata } from 'next'
-import { Geist, Geist_Mono } from 'next/font/google'
+import '@fontsource-variable/fredoka'
+import '@fontsource-variable/nunito'
 import { Analytics } from '@vercel/analytics/next'
 import './globals.css'
-
-const _geist = Geist({ subsets: ["latin"] });
-const _geistMono = Geist_Mono({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
   title: 'Memory Game',
   description: 'A card-matching memory game with 4x4 and 6x6 boards, a timer, combos and best scores.',
-  generator: 'v0.app',
   icons: {
     icon: [
       {
@@ -29,6 +26,8 @@ export const metadata: Metadata = {
   },
 }
 
+export const viewport = { themeColor: '#a6e3cf' }
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -36,7 +35,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`font-sans antialiased`}>
+      <body className="bg-table font-sans text-ink antialiased">
         {children}
         <Analytics />
       </body>

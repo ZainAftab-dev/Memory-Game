@@ -1,92 +1,87 @@
 "use client"
 
-import { Trophy, RotateCcw, Sparkles, Flame } from "lucide-react"
-import { Button } from "@/components/ui/button"
+import { useEffect, useRef } from "react"
+import { RotateCcw, Star, Flame } from "lucide-react"
+import { formatTime } from "./header"
 
 interface GameOverModalProps {
   moves: number
   time: number
+  totalPairs: number
   isNewBest: boolean
   combo: number
   onRestart: () => void
 }
 
-function formatTime(seconds: number): string {
-  const mins = Math.floor(seconds / 60)
-  const secs = seconds % 60
-  return `${mins.toString().padStart(2, "0")}:${secs.toString().padStart(2, "0")}`
-}
-
 function getPerformanceRating(moves: number, totalPairs: number): { stars: number; message: string } {
-  const perfectMoves = totalPairs // Best case: match every pair on first try
-  const ratio = moves / perfectMoves
-
-  if (ratio <= 1.5) return { stars: 3, message: "Perfect Memory!" }
-  if (ratio <= 2.5) return { stars: 2, message: "Great Job!" }
-  return { stars: 1, message: "Keep Practicing!" }
+  const ratio = moves / totalPairs // 1.0 = every pair found on the first try
+  if (ratio <= 1.5) return { stars: 3, message: "Perfect memory" }
+  if (ratio <= 2.5) return { stars: 2, message: "Great job" }
+  return { stars: 1, message: "Keep practising" }
 }
 
-export function GameOverModal({ moves, time, isNewBest, combo, onRestart }: GameOverModalProps) {
-  // Assuming 18 pairs for 6x6 or calculate based on moves
-  const rating = getPerformanceRating(moves, 18)
+export function GameOverModal({ moves, time, totalPairs, isNewBest, combo, onRestart }: GameOverModalProps) {
+  const rating = getPerformanceRating(moves, totalPairs)
+  const buttonRef = useRef<HTMLButtonElement>(null)
+
+  useEffect(() => {
+    buttonRef.current?.focus()
+  }, [])
 
   return (
-    <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-4">
-      <div className="bg-gradient-to-br from-slate-800 to-slate-900 rounded-2xl p-6 sm:p-8 max-w-sm w-full shadow-2xl border border-white/10 animate-in zoom-in-95 duration-300">
-        <div className="text-center space-y-4">
-          <div className="flex justify-center">
-            <div className="relative">
-              <Trophy className="w-16 h-16 sm:w-20 sm:h-20 text-amber-400" />
-              {isNewBest && <Sparkles className="absolute -top-2 -right-2 w-6 h-6 text-yellow-300 animate-pulse" />}
-            </div>
-          </div>
-
-          <div>
-            <h2 className="text-2xl sm:text-3xl font-bold text-white mb-2">You Win!</h2>
-            {isNewBest && <p className="text-amber-400 font-medium animate-pulse">New Best Score!</p>}
-          </div>
-
-          <div className="flex justify-center gap-1">
-            {[1, 2, 3].map((star) => (
-              <span
-                key={star}
-                className={`text-3xl transition-all duration-500 ${
-                  star <= rating.stars ? "opacity-100 scale-100" : "opacity-30 scale-90"
-                }`}
-                style={{ animationDelay: `${star * 150}ms` }}
-              >
-                ⭐
-              </span>
-            ))}
-          </div>
-          <p className="text-white/80 text-sm">{rating.message}</p>
-
-          <div className="grid grid-cols-2 gap-3 py-4">
-            <div className="bg-white/5 rounded-xl p-3">
-              <p className="text-white/60 text-xs mb-1">Moves</p>
-              <p className="text-xl font-bold text-white">{moves}</p>
-            </div>
-            <div className="bg-white/5 rounded-xl p-3">
-              <p className="text-white/60 text-xs mb-1">Time</p>
-              <p className="text-xl font-bold text-white font-mono">{formatTime(time)}</p>
-            </div>
-          </div>
-
-          {combo > 1 && (
-            <div className="flex items-center justify-center gap-2 bg-gradient-to-r from-orange-500/20 to-red-500/20 rounded-lg px-4 py-2 border border-orange-500/30">
-              <Flame className="w-5 h-5 text-orange-400" />
-              <span className="text-white font-medium">Max Combo: {combo}x</span>
-            </div>
-          )}
-
-          <Button
-            onClick={onRestart}
-            className="w-full bg-gradient-to-r from-indigo-500 to-purple-600 hover:from-indigo-600 hover:to-purple-700 text-white font-semibold py-6 text-lg rounded-xl transition-all duration-200 shadow-lg hover:shadow-indigo-500/30"
-          >
-            <RotateCcw className="w-5 h-5 mr-2" />
-            Play Again
-          </Button>
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-ink/55 p-4">
+      <div
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="win-title"
+        className="toy toast-in w-full max-w-sm rounded-3xl bg-paper p-7 text-center"
+      >
+        <div className="flex justify-center gap-2" aria-label={`${rating.stars} out of 3 stars`} role="img">
+          {[1, 2, 3].map((star) => (
+            <Star
+              key={star}
+              aria-hidden="true"
+              strokeWidth={2.4}
+              className={`h-11 w-11 ${star <= rating.stars ? "fill-sun text-ink" : "fill-transparent text-ink/25"}`}
+            />
+          ))}
         </div>
+
+        <h2 id="win-title" className="mt-4 font-display text-4xl font-semibold text-ink">
+          You found them all
+        </h2>
+        <p className="mt-1 font-semibold text-ink-soft">
+          {rating.message}
+          {isNewBest ? ", and a new best score" : ""}.
+        </p>
+
+        <dl className="mt-6 grid grid-cols-2 gap-3">
+          <div className="toy-sm rounded-2xl bg-table/50 px-3 py-3">
+            <dt className="text-sm font-bold text-ink-soft">Moves</dt>
+            <dd className="font-display text-3xl font-semibold tabular-nums text-ink">{moves}</dd>
+          </div>
+          <div className="toy-sm rounded-2xl bg-table/50 px-3 py-3">
+            <dt className="text-sm font-bold text-ink-soft">Time</dt>
+            <dd className="font-display text-3xl font-semibold tabular-nums text-ink">{formatTime(time)}</dd>
+          </div>
+        </dl>
+
+        {combo > 1 && (
+          <p className="mt-4 inline-flex items-center gap-2 font-bold text-ink">
+            <Flame aria-hidden="true" className="h-5 w-5 text-coral-deep" strokeWidth={2.6} />
+            Final streak: {combo}×
+          </p>
+        )}
+
+        <button
+          ref={buttonRef}
+          type="button"
+          onClick={onRestart}
+          className="toy toy-press mt-6 flex min-h-12 w-full items-center justify-center gap-2 rounded-full bg-coral font-display text-lg font-semibold text-ink"
+        >
+          <RotateCcw aria-hidden="true" className="h-5 w-5" strokeWidth={2.6} />
+          Play again
+        </button>
       </div>
     </div>
   )

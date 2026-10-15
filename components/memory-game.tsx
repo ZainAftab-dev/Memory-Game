@@ -4,29 +4,35 @@ import { useState, useEffect, useCallback, useRef } from "react"
 import { Card } from "./card"
 import { Header } from "./header"
 import { GameOverModal } from "./game-over-modal"
+import {
+  Anchor, Bird, Cherry, Cloud, Crown, Fish, Flame, Flower2, Ghost, Heart, Leaf, Moon, Music, Rocket,
+  Snowflake, Star, Sun, Umbrella, Zap, type LucideIcon,
+} from "lucide-react"
 
-const ICONS_6X6 = [
-  "🚀",
-  "🎮",
-  "🎯",
-  "🎨",
-  "🎭",
-  "🎪",
-  "🌟",
-  "🔥",
-  "💎",
-  "🍀",
-  "🌈",
-  "⚡",
-  "🎸",
-  "🎹",
-  "🎺",
-  "🎻",
-  "🥁",
-  "🎤",
-]
+// Each pair is a Lucide icon with its own colour (no emoji, so every OS renders it the same).
+const PIECES: Record<string, { label: string; Icon: LucideIcon; color: string }> = {
+  rocket: { label: "Rocket", Icon: Rocket, color: "#e8613d" },
+  anchor: { label: "Anchor", Icon: Anchor, color: "#2563a8" },
+  cherry: { label: "Cherry", Icon: Cherry, color: "#c0283f" },
+  crown: { label: "Crown", Icon: Crown, color: "#b7791f" },
+  fish: { label: "Fish", Icon: Fish, color: "#0f8a8a" },
+  ghost: { label: "Ghost", Icon: Ghost, color: "#6b46c1" },
+  leaf: { label: "Leaf", Icon: Leaf, color: "#2f855a" },
+  music: { label: "Music note", Icon: Music, color: "#d53f8c" },
+  bird: { label: "Bird", Icon: Bird, color: "#c05621" },
+  cloud: { label: "Cloud", Icon: Cloud, color: "#3182ce" },
+  heart: { label: "Heart", Icon: Heart, color: "#e53e3e" },
+  moon: { label: "Moon", Icon: Moon, color: "#4c51bf" },
+  star: { label: "Star", Icon: Star, color: "#d69e2e" },
+  sun: { label: "Sun", Icon: Sun, color: "#dd6b20" },
+  umbrella: { label: "Umbrella", Icon: Umbrella, color: "#805ad5" },
+  zap: { label: "Lightning bolt", Icon: Zap, color: "#b7791f" },
+  flower: { label: "Flower", Icon: Flower2, color: "#b83280" },
+  snowflake: { label: "Snowflake", Icon: Snowflake, color: "#2b6cb0" },
+}
 
-const ICONS_4X4 = ["🚀", "🎮", "🎯", "🎨", "🌟", "🔥", "💎", "🍀"]
+const ICONS_6X6 = Object.keys(PIECES)
+const ICONS_4X4 = ICONS_6X6.slice(0, 8)
 
 export type Difficulty = "4x4" | "6x6"
 
@@ -216,29 +222,52 @@ export default function MemoryGame() {
         onRestart={handleRestart}
       />
 
-      {showCombo && combo > 1 && (
-        <div className="flex justify-center mt-4 animate-bounce">
-          <span className="bg-gradient-to-r from-amber-400 to-orange-500 text-white px-4 py-2 rounded-full font-bold text-lg shadow-lg">
-            {combo}x Combo!
-          </span>
+      {/* keep the whole board on screen on laptops: width is capped by the viewport height */}
+      <div className="relative mx-auto mt-6" style={{ maxWidth: "max(300px, min(100%, calc(100dvh - 330px)))" }}>
+        <div
+          className={`grid ${difficulty === "6x6" ? "grid-cols-6 gap-2 sm:gap-3" : "grid-cols-4 gap-3 sm:gap-4"}`}
+          aria-label="Card board"
+        >
+          {cards.map((card) => {
+            const piece = PIECES[card.icon]
+            return (
+              <Card
+                key={card.id}
+                label={piece.label}
+                Icon={piece.Icon}
+                color={piece.color}
+                isFlipped={card.isFlipped}
+                isMatched={card.isMatched}
+                disabled={isChecking}
+                onClick={() => handleCardClick(card.id)}
+              />
+            )
+          })}
         </div>
-      )}
 
-      <div className={`grid gap-2 sm:gap-3 mt-6 ${difficulty === "6x6" ? "grid-cols-6" : "grid-cols-4"}`}>
-        {cards.map((card) => (
-          <Card
-            key={card.id}
-            icon={card.icon}
-            isFlipped={card.isFlipped}
-            isMatched={card.isMatched}
-            disabled={isChecking}
-            onClick={() => handleCardClick(card.id)}
-          />
-        ))}
+        <div aria-live="polite" className="pointer-events-none absolute inset-x-0 -top-3 flex justify-center">
+          {showCombo && combo > 1 && (
+            <span className="toast-in toy-sm inline-flex items-center gap-1.5 rounded-full bg-ink px-4 py-1.5 font-display text-lg font-semibold text-sun">
+              <Flame aria-hidden="true" className="h-5 w-5" strokeWidth={2.6} />
+              {combo}× streak
+            </span>
+          )}
+        </div>
       </div>
 
+      <p className="mt-6 text-center text-sm font-semibold text-ink-soft">
+        {isGameStarted ? "Two cards at a time. Matches stay face up." : "Tap any card to start the clock."}
+      </p>
+
       {isGameOver && (
-        <GameOverModal moves={moves} time={time} isNewBest={isNewBest} combo={combo} onRestart={handleRestart} />
+        <GameOverModal
+          moves={moves}
+          time={time}
+          totalPairs={totalPairs}
+          isNewBest={isNewBest}
+          combo={combo}
+          onRestart={handleRestart}
+        />
       )}
     </div>
   )

@@ -10,7 +10,7 @@ A card-matching (Concentration) game built with Next.js, React and Tailwind CSS.
 ![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-4-06B6D4?logo=tailwindcss&logoColor=white)
 ![License](https://img.shields.io/badge/license-MIT-green)
 
-<img src="docs/screenshot.png" alt="Memory Game in progress" width="620"/>
+<img src="docs/screenshot.png" alt="Memory Game in progress" width="640"/>&nbsp;<img src="docs/mobile.png" alt="Memory Game on a phone" width="190"/>
 
 </div>
 
@@ -20,12 +20,14 @@ A card-matching (Concentration) game built with Next.js, React and Tailwind CSS.
 
 - **Two board sizes:** 4×4 (8 pairs) and 6×6 (18 pairs), switchable at any time
 - **Fair shuffle:** cards are shuffled with the Fisher–Yates algorithm at the start of every game
-- **3D flip animation:** cards flip in 3D; matched pairs turn green and stay face up
+- **Toy-box design:** chunky, outlined game pieces on a mint tabletop, 18 colourful SVG icon pairs (no emoji, so it looks the same on every device)
+- **3D flip animation:** cards flip in 3D; matched pairs turn yellow and stay face up
 - **Move counter, timer and pair progress:** the timer starts on your first flip
 - **Combo streaks:** a "combo" badge pops up when you find several pairs in a row
 - **Best score per board size:** your lowest move count is saved in `localStorage`
-- **Win screen:** final moves and time, a 1–3 star rating and a "New Best Score!" badge
-- **Restart** button and a fully responsive layout for phones and desktops
+- **Win screen:** final moves and time, a 1–3 star rating based on the board size, and a note when you set a new best score
+- **Restart** button and a fully responsive layout; on laptops the whole board always fits on screen
+- **Accessible:** keyboard play with visible focus, screen-reader labels for every card, live streak announcements, and reduced-motion support
 
 ## How to play
 
@@ -48,7 +50,7 @@ A card-matching (Concentration) game built with Next.js, React and Tailwind CSS.
 |---|---|
 | Framework | Next.js 16 (App Router), React 19 |
 | Language | TypeScript |
-| Styling | Tailwind CSS 4, shadcn/ui, Lucide icons |
+| Styling | Tailwind CSS 4, Lucide icons, Fredoka + Nunito (self-hosted via Fontsource) |
 | State | React hooks (`useState`, `useEffect`, `useCallback`, `useRef`) |
 | Storage | Browser `localStorage` |
 
