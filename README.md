@@ -1,142 +1,97 @@
+<div align="center">
 
-# Memory Game (Concentration) – React
+# 🧠 Memory Game
 
-A fully functional and interactive **Memory Card Matching Game** built using **React**. The game challenges players to match pairs of cards with the least number of moves and in the shortest time possible. It includes smooth animations, multiple difficulty levels, and score tracking.
+A card-matching (Concentration) game built with Next.js, React and Tailwind CSS. Flip cards, find the pairs, and beat your best score in as few moves as possible.
+
+![Next.js](https://img.shields.io/badge/Next.js-16-000000?logo=nextdotjs&logoColor=white)
+![React](https://img.shields.io/badge/React-19-61DAFB?logo=react&logoColor=black)
+![TypeScript](https://img.shields.io/badge/TypeScript-5-3178C6?logo=typescript&logoColor=white)
+![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-4-06B6D4?logo=tailwindcss&logoColor=white)
+![License](https://img.shields.io/badge/license-MIT-green)
+
+<img src="docs/screenshot.png" alt="Memory Game in progress" width="620"/>
+
+</div>
+
+---
 
 ## Features
 
-### Core Gameplay
+- **Two board sizes:** 4×4 (8 pairs) and 6×6 (18 pairs), switchable at any time
+- **Fair shuffle:** cards are shuffled with the Fisher–Yates algorithm at the start of every game
+- **3D flip animation:** cards flip in 3D; matched pairs turn green and stay face up
+- **Move counter, timer and pair progress:** the timer starts on your first flip
+- **Combo streaks:** a "combo" badge pops up when you find several pairs in a row
+- **Best score per board size:** your lowest move count is saved in `localStorage`
+- **Win screen:** final moves and time, a 1–3 star rating and a "New Best Score!" badge
+- **Restart** button and a fully responsive layout for phones and desktops
 
-* Interactive **memory matching game**
-* Cards are initially hidden and shuffled randomly
-* Click to flip cards and reveal symbols
-* Matching pairs remain visible
-* Non-matching pairs flip back after a short delay
-* Game ends when all pairs are matched
+## How to play
 
-### Game Modes
+1. Choose **4x4** or **6x6** in the top-right corner.
+2. Click a card to flip it, then click a second card.
+3. If the two cards match, they stay open. If not, they flip back after one second.
+4. Every pair of flips counts as one move. Match all pairs to win.
 
-* **Easy Mode**: 4x4 grid (16 cards)
-* **Medium Mode**: 6x6 grid (36 cards)
+**Star rating** (moves ÷ number of pairs):
 
-### Tracking & Feedback
+| Rating | Moves per pair |
+|---|---|
+| ⭐⭐⭐ Perfect Memory! | 1.5 or fewer |
+| ⭐⭐ Great Job! | 2.5 or fewer |
+| ⭐ Keep Practicing! | more than 2.5 |
 
-* Move counter to track player performance
-* Live timer to measure completion time
-* “You Win” message when the game is completed
-* Restart button to reset the game at any time
+## Tech stack
 
-### Visuals & UI
+| Layer | Tools |
+|---|---|
+| Framework | Next.js 16 (App Router), React 19 |
+| Language | TypeScript |
+| Styling | Tailwind CSS 4, shadcn/ui, Lucide icons |
+| State | React hooks (`useState`, `useEffect`, `useCallback`, `useRef`) |
+| Storage | Browser `localStorage` |
 
-* Smooth card flip animations using CSS
-* Responsive layout for desktop and mobile
-* Highlighted matched cards for visual feedback
-* Clean and modern UI design
+No backend or API keys needed.
 
-### Bonus Features
+## Getting started
 
-* Best score stored using `localStorage`
-* Difficulty selection before starting the game
-* Well-structured and reusable components
-
-## Tech Stack
-
-* **React** (Functional Components)
-* **React Hooks**: `useState`, `useEffect`
-* **CSS** for animations and layout
-* **JavaScript (ES6+)**
-
-No external APIs and no backend required.
-
-## Project Structure
-
-```
-src/
-│
-├── components/
-│   ├── MemoryGame.jsx        # Main game logic and state
-│   ├── Card.jsx              # Individual card component
-│   ├── Header.jsx            # Displays moves, timer, difficulty
-│   └── GameOverModal.jsx     # Game completion modal
-│
-├── styles/
-│   ├── Card.css
-│   ├── MemoryGame.css
-│   └── Modal.css
-│
-├── App.jsx
-├── index.js
-└── index.css
-```
-
-## How the Game Works
-
-1. Cards are shuffled randomly at the start of each game.
-2. The player clicks two cards to reveal them.
-3. If the cards match:
-
-   * They remain visible
-   * They are marked as matched
-4. If they do not match:
-
-   * They flip back after a short delay
-5. Each pair attempt increases the move counter.
-6. The timer starts on the first move.
-7. The game ends when all pairs are matched.
-
-## Installation & Setup
-
-### Prerequisites
-
-* Node.js installed
-* npm installed
-
-### Steps to Run
+**Requirements:** Node.js 18.18 or newer.
 
 ```bash
-# Clone the repository
-git clone https://github.com/your-username/memory-game-react.git
-
-# Navigate to the project folder
-cd memory-game-react
-
-# Install dependencies
+git clone https://github.com/ZainAftab-dev/Memory-Game.git
+cd Memory-Game
 npm install
-
-# Start the development server
-npm start
+npm run dev
 ```
 
-The app will run on:
+Open [http://localhost:3000](http://localhost:3000).
+
+For a production build: `npm run build` then `npm start`.
+
+## Project structure
 
 ```
-http://localhost:3000
+app/
+├── layout.tsx              # root layout and page metadata
+├── page.tsx                # renders <MemoryGame />
+└── globals.css             # Tailwind theme and 3D flip utilities
+components/
+├── memory-game.tsx         # game state: shuffle, flips, matching, timer, combos, best score
+├── card.tsx                # one card with front/back faces and flip animation
+├── header.tsx              # title, board-size switch, restart, moves/time/pairs/best
+├── game-over-modal.tsx     # win screen with stars and stats
+└── ui/                     # shadcn/ui components
 ```
 
-## Difficulty Levels
+## Deployment
 
-| Level  | Grid Size | Total Cards |
-| ------ | --------- | ----------- |
-| Easy   | 4 x 4     | 16          |
-| Medium | 6 x 6     | 36          |
-
-## Future Improvements
-
-* Add Hard mode (8x8 grid)
-* Add sound effects for flips and matches
-* Add animations for winning celebration
-* Add leaderboard support
-* Add dark mode
+The app is a standard Next.js project. Import the repository into [Vercel](https://vercel.com/new) and deploy with the default settings; no environment variables are required.
 
 ## Author
 
-**Zain Aftab**
-
-* GitHub: [https://github.com/ZainAftab-dev](https://github.com/ZainAftab-dev)
-* Email: [zainaftab589@gmail.com](mailto:zainaftab589@gmail.com)
+**Zain Aftab** · [GitHub](https://github.com/ZainAftab-dev) · [LinkedIn](https://www.linkedin.com/in/zain-aftab-563727295/)
 
 ## License
 
-This project is open-source and available under the **MIT License**.
-
-
+[MIT](LICENSE)

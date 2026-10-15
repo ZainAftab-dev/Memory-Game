@@ -7,8 +7,8 @@ const _geist = Geist({ subsets: ["latin"] });
 const _geistMono = Geist_Mono({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: 'v0 App',
-  description: 'Created with v0',
+  title: 'Memory Game',
+  description: 'A card-matching memory game with 4x4 and 6x6 boards, a timer, combos and best scores.',
   generator: 'v0.app',
   icons: {
     icon: [
