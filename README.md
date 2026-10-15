@@ -10,6 +10,8 @@ A card-matching (Concentration) game built with Next.js, React and Tailwind CSS.
 ![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-4-06B6D4?logo=tailwindcss&logoColor=white)
 ![License](https://img.shields.io/badge/license-MIT-green)
 
+**[▶ Live demo: memory-game-zain.vercel.app](https://memory-game-zain.vercel.app)**
+
 <img src="docs/screenshot.png" alt="Memory Game in progress" width="640"/>&nbsp;<img src="docs/mobile.png" alt="Memory Game on a phone" width="190"/>
 
 </div>
